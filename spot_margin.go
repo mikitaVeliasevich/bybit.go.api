@@ -3,8 +3,9 @@ package bybit_connector
 import (
 	"context"
 	"errors"
-	"github.com/bybit-exchange/bybit.go.api/handlers"
 	"net/http"
+
+	"github.com/bybit-exchange/bybit.go.api/handlers"
 )
 
 func (s *BybitClientRequest) GetSpotMarginData(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
@@ -22,8 +23,8 @@ func (s *BybitClientRequest) GetSpotMarginData(ctx context.Context, opts ...Requ
 		endpoint: endpoint,
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 func (s *BybitClientRequest) GetTieredCollateralData(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
@@ -35,8 +36,8 @@ func (s *BybitClientRequest) GetTieredCollateralData(ctx context.Context, opts .
 		endpoint: "/v5/spot-margin-trade/collateral",
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 func (s *BybitClientRequest) GetSpotMarginInterests(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
@@ -55,8 +56,8 @@ func (s *BybitClientRequest) GetSpotMarginInterests(ctx context.Context, opts ..
 		endpoint: endpoint,
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 func (s *BybitClientRequest) SetSpotMarginLeverage(ctx context.Context, opts ...RequestOption) (res *ServerResponse, err error) {
@@ -72,7 +73,7 @@ func (s *BybitClientRequest) SetSpotMarginLeverage(ctx context.Context, opts ...
 		secType:  secTypeSigned,
 	}
 	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
+	data, headers, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -80,6 +81,9 @@ func (s *BybitClientRequest) SetSpotMarginLeverage(ctx context.Context, opts ...
 	err = json.Unmarshal(data, res)
 	if err != nil {
 		return nil, err
+	}
+	if headers != nil {
+		res.Headers = headers
 	}
 	return res, nil
 }
@@ -97,7 +101,7 @@ func (s *BybitClientRequest) GetSpotMarginState(ctx context.Context, opts ...Req
 		secType:  secTypeSigned,
 	}
 	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
+	data, headers, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -105,6 +109,9 @@ func (s *BybitClientRequest) GetSpotMarginState(ctx context.Context, opts ...Req
 	err = json.Unmarshal(data, res)
 	if err != nil {
 		return nil, err
+	}
+	if headers != nil {
+		res.Headers = headers
 	}
 	return res, nil
 }
@@ -125,7 +132,7 @@ func (s *BybitClientRequest) ToggleSpotMarginTrade(ctx context.Context, opts ...
 		secType:  secTypeSigned,
 	}
 	r.setParams(s.params)
-	data, err := s.c.callAPI(ctx, r, opts...)
+	data, headers, err := s.c.callAPI(ctx, r, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -133,6 +140,9 @@ func (s *BybitClientRequest) ToggleSpotMarginTrade(ctx context.Context, opts ...
 	err = json.Unmarshal(data, res)
 	if err != nil {
 		return nil, err
+	}
+	if headers != nil {
+		res.Headers = headers
 	}
 	return res, nil
 }
@@ -150,8 +160,8 @@ func (s *BybitClientRequest) GetSpotMarginCoin(ctx context.Context, opts ...Requ
 		endpoint: "/v5/spot-cross-margin-trade/pledge-token",
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 // Deprecated: GetSpotMarginBorrowCoin is deprecated.
@@ -167,8 +177,8 @@ func (s *BybitClientRequest) GetSpotMarginBorrowCoin(ctx context.Context, opts .
 		endpoint: "/v5/spot-cross-margin-trade/borrow-token",
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 // Deprecated: GetSpotMarginLoanAccountInfo is deprecated.
@@ -184,8 +194,8 @@ func (s *BybitClientRequest) GetSpotMarginLoanAccountInfo(ctx context.Context, o
 		endpoint: "/v5/spot-cross-margin-trade/account",
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 // Deprecated: GetSpotMarginBorrowOrders is deprecated.
@@ -201,8 +211,8 @@ func (s *BybitClientRequest) GetSpotMarginBorrowOrders(ctx context.Context, opts
 		endpoint: "/v5/spot-cross-margin-trade/orders",
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 // Deprecated: GetSpotMarginRepaymentOrders is deprecated.
@@ -218,8 +228,8 @@ func (s *BybitClientRequest) GetSpotMarginRepaymentOrders(ctx context.Context, o
 		endpoint: "/v5/spot-cross-margin-trade/repay-history",
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 // Deprecated: BorrowSpotMarginLoan is deprecated.
@@ -235,8 +245,8 @@ func (s *BybitClientRequest) BorrowSpotMarginLoan(ctx context.Context, opts ...R
 		endpoint: "/v5/spot-cross-margin-trade/loan",
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
 
 // Deprecated: RepaySpotMarginLoan is deprecated.
@@ -252,6 +262,6 @@ func (s *BybitClientRequest) RepaySpotMarginLoan(ctx context.Context, opts ...Re
 		endpoint: "/v5/spot-cross-margin-trade/repay",
 		secType:  secTypeSigned,
 	}
-	data, err := SendRequest(ctx, opts, r, s, err)
-	return GetServerResponse(err, data)
+	data, headers, err := SendRequest(ctx, opts, r, s, err)
+	return GetServerResponse(err, data, headers)
 }
